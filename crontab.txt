@@ -1,1 +1,1 @@
-0 * * * * cd **ABSOLUTE PATH**/market-tracker && **ABSOLUTE PATH**/market-tracker/.venv/bin/python live_price.py >> cron.log 2>&1
+0 * * * * cd <absolute path>/market-tracker && <absolute path>/market-tracker/.venv/bin/python live_price.py >> cron.log 2>&1
