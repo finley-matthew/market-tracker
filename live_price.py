@@ -1,4 +1,4 @@
-#Live market data from API
+# Live market data from API
 import requests
 import logging
 
@@ -20,9 +20,9 @@ try:
     else:
         data = response.json()
         price = data['price']
-        output =  f'{data['name']} ({data['symbol']}): {data['currencySymbol']}{price:.2f} {data['currency']}'
+        output = f"{data['name']} ({data['symbol']}): {data['currencySymbol']}{price:.2f} {data['currency']}"
         print(output)
-        logger.info(f'{data['symbol']} {data['price']}')
+        logger.info(f"{data['symbol']} {data['price']}")
 except requests.exceptions.Timeout as e:
     logger.error(f'Timeout {symbol} {type(e).__name__}')
 except requests.exceptions.ConnectionError as e:

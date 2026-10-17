@@ -12,11 +12,16 @@ else:
     sys.exit(1)
 
 try:
-    response = requests.get('https://api.stlouisfed.org/fred/series/observations', params={"api_key": os.getenv("FRED_KEY"), "series_id": "T10Y2Y", "file_type": "json", "limit": 10, "sort_order": "desc"}, timeout = 5)
+    fred_params = {"api_key": os.getenv("FRED_KEY"),
+                   "series_id": "T10Y2Y",
+                   "file_type": "json",
+                   "limit": 10,
+                   "sort_order": "desc"}
+    response = requests.get('https://api.stlouisfed.org/fred/series/observations', params=fred_params, timeout=5)
 
     if response.status_code != 200:
         output = f'Error {response.status_code}. Try again.'
-        print(output)
+        print(output, file=sys.stderr)
         sys.exit(1)
     else:
         data = response.json()
@@ -29,15 +34,15 @@ try:
                     print(output)
                     break
 
-except requests.exceptions.Timeout:
-    print("Connection Timeout. Try again.")
+except requests.exceptions.Timeout as e:
+    print(f"Connection Timeout. {type(e).__name__}", file=sys.stderr)
     sys.exit(1)
-except requests.exceptions.ConnectionError:
-    print("Connection Error. Try again.")
+except requests.exceptions.ConnectionError as e:
+    print(f"Connection Error. {type(e).__name__}", file=sys.stderr)
     sys.exit(1)
-except requests.exceptions.JSONDecodeError:
-    print("JSON Decode Error. Try again.")
+except requests.exceptions.JSONDecodeError as e:
+    print(f"JSON Decode Error. {type(e).__name__}", file=sys.stderr)
     sys.exit(1)
-except requests.exceptions.RequestException:
-    print("Exception Error. Try again.")
+except requests.exceptions.RequestException as e:
+    print(f"Exception Error. {type(e).__name__}", file=sys.stderr)
     sys.exit(1)
