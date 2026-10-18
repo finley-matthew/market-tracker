@@ -1,14 +1,15 @@
 import os
 import sys
+
 from dotenv import load_dotenv
 import requests
 
 load_dotenv()
 
 if os.getenv("FRED_KEY"):
-    print("FRED_KEY is set.")
+    print("FRED_KEY is set.", file=sys.stderr)
 else:
-    print("FRED_KEY is not set.")
+    print("FRED_KEY is not set.", file=sys.stderr)
     sys.exit(1)
 
 try:
@@ -30,7 +31,7 @@ try:
             for obs in data["observations"]:
                 value = obs["value"]
                 date = obs["date"]
-                if obs["value"] == ".":
+                if value == ".":
                     continue
                 else:
                     print(f"10Y-2Y spread: {float(value):.2f}% ({date})")

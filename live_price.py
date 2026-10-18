@@ -16,15 +16,14 @@ try:
         logger.error(f"ClientError {symbol} {response.status_code}")
     elif response.status_code // 100 == 5:
         logger.error(f"ServerError {symbol} {response.status_code}")
-
     else:
         data = response.json()
         name = data["name"]
-        symbol = data["symbol"]
+        api_symbol = data["symbol"]
         currency_symbol = data["currencySymbol"]
         price = data["price"]
         currency = data["currency"]
-        print(f"{name} ({symbol}): {currency_symbol}{price:.2f} {currency}")
+        print(f"{name} ({api_symbol}): {currency_symbol}{price:.2f} {currency}")
         logger.info(f"{symbol} {price}")
 except requests.exceptions.Timeout as e:
     logger.error(f"Timeout {symbol} {type(e).__name__}")

@@ -1,8 +1,9 @@
 import os
 import sys
 import xml.etree.ElementTree as ET
-import requests
+
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
