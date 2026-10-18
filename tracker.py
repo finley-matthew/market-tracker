@@ -4,6 +4,9 @@ with open("sample_price.json", "r") as file:
     data = json.load(file)
 
 for key in data:
-    new_price = data[key]["price"]
-    output = f'{data[key]["name"]} ({data[key]["symbol"]}): {new_price:.2f} {data[key]["currency"]} as of {data[key]["timestamp"]}'
-    print(output)
+    name = data[key]["name"]
+    symbol = data[key]["symbol"]
+    price = data[key]["price"]
+    currency = data[key]["currency"]
+    timestamp = data[key]["timestamp"]
+    print(f"{name} ({symbol}): {price:.2f} {currency} as of {timestamp}")

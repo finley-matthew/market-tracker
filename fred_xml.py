@@ -1,15 +1,15 @@
-from dotenv import load_dotenv
 import os
-import requests
 import sys
 import xml.etree.ElementTree as ET
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
-if (os.getenv("FRED_KEY")):
-    print("FRED_KEY is set.")
+if os.getenv("FRED_KEY"):
+    print("FRED_KEY is set.", file=sys.stderr)
 else:
-    print("FRED_KEY is not set.")
+    print("FRED_KEY is not set.", file=sys.stderr)
     sys.exit(1)
 
 try:
@@ -18,22 +18,22 @@ try:
                    "file_type": "xml",
                    "limit": 3,
                    "sort_order": "desc"}
-    response = requests.get('https://api.stlouisfed.org/fred/series/observations', params=fred_params, timeout=5)
+    response = requests.get("https://api.stlouisfed.org/fred/series/observations",
+                            params=fred_params,
+                            timeout=5)
 
     if response.status_code != 200:
-        output = f'Error {response.status_code}. Try again.'
-        print(output, file=sys.stderr)
+        print(f"Error {response.status_code}. Try again.", file=sys.stderr)
         sys.exit(1)
     else:
         root = ET.fromstring(response.text)
         for child in root:
-            value = child.get('value')
-            date = child.get('date')
+            value = child.get("value")
+            date = child.get("date")
             if value == ".":
                 continue
             else:
-                output = f'10Y-2Y spread: {float(value):.2f}% ({date})'
-                print(output)
+                print(f"10Y-2Y spread: {float(value):.2f}% ({date})")
                 break
 
 except requests.exceptions.Timeout as e:

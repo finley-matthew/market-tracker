@@ -1,11 +1,11 @@
-from dotenv import load_dotenv
 import os
-import requests
 import sys
+from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
-if (os.getenv("FRED_KEY")):
+if os.getenv("FRED_KEY"):
     print("FRED_KEY is set.")
 else:
     print("FRED_KEY is not set.")
@@ -17,21 +17,23 @@ try:
                    "file_type": "json",
                    "limit": 10,
                    "sort_order": "desc"}
-    response = requests.get('https://api.stlouisfed.org/fred/series/observations', params=fred_params, timeout=5)
+    response = requests.get("https://api.stlouisfed.org/fred/series/observations",
+                            params=fred_params,
+                            timeout=5)
 
     if response.status_code != 200:
-        output = f'Error {response.status_code}. Try again.'
-        print(output, file=sys.stderr)
+        print(f"Error {response.status_code}. Try again.", file=sys.stderr)
         sys.exit(1)
     else:
         data = response.json()
         if data["observations"]:
             for obs in data["observations"]:
+                value = obs["value"]
+                date = obs["date"]
                 if obs["value"] == ".":
                     continue
                 else:
-                    output = f'10Y-2Y spread: {float(obs["value"]):.2f}% ({obs["date"]})'
-                    print(output)
+                    print(f"10Y-2Y spread: {float(value):.2f}% ({date})")
                     break
 
 except requests.exceptions.Timeout as e:
