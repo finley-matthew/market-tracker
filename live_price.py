@@ -1,6 +1,11 @@
+from datetime import datetime, timezone
 import logging
+from pathlib import Path
+import sqlite3
 
 import requests
+
+DB_PATH = Path(__file__).parent / "price.db"
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +29,22 @@ try:
         currency_symbol = data["currencySymbol"]
         price = data["price"]
         currency = data["currency"]
+        timestamp = datetime.now(timezone.utc).isoformat()
         print(f"{name} ({api_symbol}): {currency_symbol}{price:.2f} {currency}")
         logger.info(f"{symbol} {price}")
+
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS prices (
+                timestamp TEXT NOT NULL,
+                symbol TEXT NOT NULL,
+                price REAL NOT NULL
+            )
+        """)
+
+        conn.execute("INSERT INTO prices VALUES (?, ?, ?)", (timestamp, api_symbol, price))
+        conn.commit()
+        conn.close()
 except requests.exceptions.Timeout as e:
     logger.error(f"Timeout {symbol} {type(e).__name__}")
 except requests.exceptions.ConnectionError as e:
